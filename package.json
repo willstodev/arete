@@ -21,6 +21,7 @@
   "dependencies": {
     "commander": "^14.0.1",
     "gray-matter": "^4.0.3",
+    "node-latex-compiler": "1.0.5",
     "zod": "^4.1.12"
   },
   "devDependencies": {

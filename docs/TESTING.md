@@ -6,7 +6,7 @@ Tests verify behavior and invariants, not implementation trivia.
 
 - Unit tests: parser helpers, schemas, date formatting, LaTeX escaping.
 - Integration tests: candidate Markdown to resume model, validation errors.
-- End-to-end tests: CLI build from sanitized fixture to `.tex`, and PDF when TeX is available.
+- End-to-end tests: CLI build from sanitized fixture to `.tex`, and PDF through the npm-managed compiler.
 
 ## Critical Coverage
 
@@ -17,7 +17,7 @@ Tests verify behavior and invariants, not implementation trivia.
 - STAR evidence notes do not leak into rendered bullets unless intentionally modeled.
 - Localization.
 - LaTeX escaping.
-- Missing tool diagnostics.
+- Missing compiler diagnostics.
 
 ## Commands
 

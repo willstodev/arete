@@ -19,7 +19,7 @@ Create the initial Arete documentation, TypeScript toolchain, CLI, candidate par
 - `arete init`, `arete validate`, and `arete build` work against the example candidate.
 - Generated resume facts are derived from candidate source data.
 - LaTeX output escapes candidate text.
-- Missing local TeX tooling produces a useful diagnostic.
+- PDF compilation works through npm-installed tooling, with a useful diagnostic if no compiler path is available.
 - Formatting, linting, type checking, tests, coverage, and build pass.
 
 ## Progress
@@ -28,8 +28,12 @@ Create the initial Arete documentation, TypeScript toolchain, CLI, candidate par
 - Toolchain bootstrap completed.
 - Candidate parsing and validation completed for the MVP Markdown contract, including parse-safe STAR evidence notes in examples/templates.
 - Resume composition and localization completed for deterministic English and `pt-BR` labels/date output.
-- LaTeX rendering and PDF compilation wrapper completed.
+- LaTeX rendering and npm-managed PDF compilation wrapper completed, with system `latexmk`/`pdflatex` fallbacks retained.
 - Tests, coverage, build, and CLI smoke validation completed.
+
+## Decisions
+
+- PDF compilation should not require Linux distribution packages by default. Arete uses the npm dependency `node-latex-compiler`, which supplies Tectonic through npm optional runtime packages. System `latexmk` and `pdflatex` remain fallback paths for environments that already provide them.
 
 ## Validation
 
@@ -41,4 +45,4 @@ Create the initial Arete documentation, TypeScript toolchain, CLI, candidate par
 - `pnpm arete validate --source examples/candidate.example.md`
 - `ARETE_SKIP_PDF_COMPILE=1 pnpm arete build --source examples/candidate.example.md --out dist/example`
 
-Local TeX tooling is not installed in the current environment, so full PDF compilation was validated only through the missing-tool diagnostic path and the skip-enabled build path.
+Local distribution TeX tooling is not installed in the current environment. Full PDF compilation is validated through the npm-managed compiler path installed by `pnpm install`.

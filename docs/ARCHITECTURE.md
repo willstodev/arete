@@ -9,7 +9,7 @@ Arete is a Node.js TypeScript CLI with a linear compiler pipeline.
 3. Runtime schemas validate parsed data into a canonical candidate model.
 4. The composer creates a resume model from canonical facts and build options.
 5. The LaTeX renderer escapes all candidate text and writes `resume.tex`.
-6. The compiler invokes `latexmk` or `pdflatex` to produce `resume.pdf`.
+6. The compiler invokes the npm-managed LaTeX compiler first, then falls back to `latexmk` or `pdflatex`, to produce `resume.pdf`.
 
 ## Boundaries
 
@@ -46,4 +46,4 @@ AI is absent from the MVP. A future AI component may only rewrite or prioritize 
 
 ## Errors
 
-Validation and build errors should name the failing file or tool and explain the corrective action. Missing TeX tools are reported as environment failures, not as parser or renderer failures.
+Validation and build errors should name the failing file or tool and explain the corrective action. Missing PDF compiler tooling is reported as an environment failure, not as a parser or renderer failure. The default compiler path is installed through npm dependencies rather than host distribution packages.

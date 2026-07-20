@@ -2,6 +2,8 @@ import { access } from "node:fs/promises";
 import { constants } from "node:fs";
 import { spawn } from "node:child_process";
 import { basename, dirname } from "node:path";
+import { compile as compileWithNodeLatex } from "node-latex-compiler";
+import type { CompileResult as NodeLatexCompileResult } from "node-latex-compiler";
 import { EnvironmentError } from "../diagnostics/errors.js";
 
 export type CompileResult = {
@@ -10,7 +12,20 @@ export type CompileResult = {
   message: string;
 };
 
-export async function compilePdf(texPath: string): Promise<CompileResult> {
+type NodeLatexCompiler = (config: {
+  texFile: string;
+  outputDir: string;
+  outputFile: string;
+}) => Promise<NodeLatexCompileResult>;
+
+type CompilePdfOptions = {
+  nodeCompiler?: NodeLatexCompiler | null;
+};
+
+export async function compilePdf(
+  texPath: string,
+  options: CompilePdfOptions = {}
+): Promise<CompileResult> {
   const pdfPath = texPath.replace(/\.tex$/u, ".pdf");
 
   if (process.env.ARETE_SKIP_PDF_COMPILE === "1") {
@@ -19,6 +34,13 @@ export async function compilePdf(texPath: string): Promise<CompileResult> {
       pdfPath,
       message: "PDF compilation skipped by ARETE_SKIP_PDF_COMPILE=1."
     };
+  }
+
+  const nodeCompiler = Object.hasOwn(options, "nodeCompiler")
+    ? options.nodeCompiler
+    : compileWithNodeLatex;
+  if (nodeCompiler) {
+    return compilePdfWithNodeLatex(nodeCompiler, texPath, pdfPath);
   }
 
   const latexmk = await commandExists("latexmk");
@@ -44,8 +66,36 @@ export async function compilePdf(texPath: string): Promise<CompileResult> {
   }
 
   throw new EnvironmentError(
-    `Wrote ${texPath}, but no LaTeX compiler was found. Install latexmk or pdflatex to produce ${pdfPath}.`
+    `Wrote ${texPath}, but no PDF compiler was found. Run pnpm install to install the npm-managed compiler, or install latexmk/pdflatex to produce ${pdfPath}.`
   );
+}
+
+async function compilePdfWithNodeLatex(
+  nodeCompiler: NodeLatexCompiler,
+  texPath: string,
+  pdfPath: string
+): Promise<CompileResult> {
+  let result: NodeLatexCompileResult;
+  try {
+    result = await nodeCompiler({
+      texFile: texPath,
+      outputDir: dirname(texPath),
+      outputFile: pdfPath
+    });
+  } catch (error) {
+    throw new EnvironmentError(`npm-managed LaTeX compiler failed: ${formatCompilerError(error)}`);
+  }
+
+  if (result.status !== "success") {
+    throw new EnvironmentError(
+      `npm-managed LaTeX compiler failed: ${
+        result.stderr ?? result.error ?? `exit code ${result.exitCode ?? "unknown"}`
+      }`
+    );
+  }
+
+  await assertPdfExists(pdfPath);
+  return { skipped: false, pdfPath, message: `Wrote ${pdfPath}` };
 }
 
 async function assertPdfExists(pdfPath: string): Promise<void> {
@@ -67,6 +117,10 @@ async function commandExists(command: string): Promise<boolean> {
     }
   }
   return false;
+}
+
+function formatCompilerError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 async function run(command: string, args: string[], cwd: string): Promise<void> {

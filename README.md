@@ -6,7 +6,7 @@ The project is CLI-first and deliberately small: no web app, account system, res
 
 ## Status
 
-Greenfield bootstrap in progress. The current implementation provides the initial CLI, Markdown candidate parsing, validation, deterministic resume composition, LaTeX rendering, and a PDF compilation wrapper that reports missing local TeX tooling clearly.
+Greenfield bootstrap in progress. The current implementation provides the initial CLI, Markdown candidate parsing, validation, deterministic resume composition, LaTeX rendering, and npm-managed PDF compilation.
 
 ## Goals
 
@@ -29,7 +29,7 @@ pnpm arete validate --source candidate.md
 pnpm arete build --source candidate.md --out dist/resume
 ```
 
-`arete build` writes `resume.tex` and attempts to compile `resume.pdf` when `latexmk` or `pdflatex` is installed. English is the default locale; use `--locale pt-BR` for localized section labels and dates currently supported by the MVP.
+`arete build` writes `resume.tex` and compiles `resume.pdf` through the npm-managed LaTeX compiler installed by `pnpm install`. System `latexmk` or `pdflatex` are used only as fallbacks. English is the default locale; use `--locale pt-BR` for localized section labels and dates currently supported by the MVP.
 
 ## Architecture
 
