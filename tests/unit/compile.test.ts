@@ -41,7 +41,7 @@ describe("compilePdf", () => {
           expect(config.texFile).toBe(relative(process.cwd(), texPath));
           expect(config.outputDir).toBe(relative(process.cwd(), out));
           expect(config.outputFile).toBe(relative(process.cwd(), join(out, "resume.pdf")));
-          await writeFile(config.outputFile, "pdf");
+          await writeFile(config.outputFile, onePagePdf());
           return { status: "success", pdfPath: config.outputFile };
         }
       });
@@ -88,7 +88,7 @@ describe("compilePdf", () => {
           "#!/usr/bin/env sh",
           "for arg do tex_file=$arg; done",
           'test "$tex_file" = "resume.tex" || exit 2',
-          'touch "${tex_file%.tex}.pdf"'
+          'printf "%s" "/Type /Page" > "${tex_file%.tex}.pdf"'
         ].join("\n"),
         "utf8"
       );
@@ -114,4 +114,29 @@ describe("compilePdf", () => {
       "no PDF compiler was found"
     );
   });
+
+  it("rejects PDFs that exceed one page", async () => {
+    const root = await mkdtemp(join(tmpdir(), "arete-compile-"));
+    try {
+      const out = join(root, "out");
+      await mkdir(out);
+      const texPath = join(out, "resume.tex");
+      await writeFile(texPath, "\\documentclass{article}\\begin{document}Test\\end{document}\n");
+
+      await expect(
+        compilePdf(relative(process.cwd(), texPath), {
+          nodeCompiler: async (config) => {
+            await writeFile(config.outputFile, "/Type /Page\n/Type /Page\n");
+            return { status: "success", pdfPath: config.outputFile };
+          }
+        })
+      ).rejects.toThrow("PDF must be exactly one page");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
 });
+
+function onePagePdf(): string {
+  return "/Type /Page\n";
+}

@@ -11,6 +11,7 @@ Arete compiles structured candidate information into truthful resumes. Candidate
 - English output by default.
 - Explicit alternate locale support for section labels and date formatting.
 - LaTeX generation and PDF compilation.
+- One-page A4 resume output by default.
 - ATS-oriented layout with selectable text and predictable reading order.
 - Tests and CI for parser, validation, provenance, rendering, and CLI flows.
 

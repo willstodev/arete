@@ -1,4 +1,4 @@
-import { access } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import { constants } from "node:fs";
 import { spawn } from "node:child_process";
 import { basename, dirname } from "node:path";
@@ -50,7 +50,7 @@ export async function compilePdf(
       ["-pdf", "-interaction=nonstopmode", "-halt-on-error", basename(texPath)],
       dirname(texPath)
     );
-    await assertPdfExists(pdfPath);
+    await assertSinglePagePdf(pdfPath);
     return { skipped: false, pdfPath, message: `Wrote ${pdfPath}` };
   }
 
@@ -61,7 +61,7 @@ export async function compilePdf(
       ["-interaction=nonstopmode", "-halt-on-error", basename(texPath)],
       dirname(texPath)
     );
-    await assertPdfExists(pdfPath);
+    await assertSinglePagePdf(pdfPath);
     return { skipped: false, pdfPath, message: `Wrote ${pdfPath}` };
   }
 
@@ -94,15 +94,23 @@ async function compilePdfWithNodeLatex(
     );
   }
 
-  await assertPdfExists(pdfPath);
+  await assertSinglePagePdf(pdfPath);
   return { skipped: false, pdfPath, message: `Wrote ${pdfPath}` };
 }
 
-async function assertPdfExists(pdfPath: string): Promise<void> {
+async function assertSinglePagePdf(pdfPath: string): Promise<void> {
   try {
     await access(pdfPath, constants.F_OK);
   } catch {
     throw new EnvironmentError(`LaTeX compiler completed, but ${pdfPath} was not created.`);
+  }
+
+  const pdf = await readFile(pdfPath, "latin1");
+  const pageCount = pdf.match(/\/Type\s*\/Page\b/gu)?.length ?? 0;
+  if (pageCount > 1) {
+    throw new EnvironmentError(
+      `PDF must be exactly one page, but ${pdfPath} contains ${pageCount} pages.`
+    );
   }
 }
 

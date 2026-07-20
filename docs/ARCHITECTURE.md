@@ -8,7 +8,7 @@ Arete is a Node.js TypeScript CLI with a linear compiler pipeline.
 2. The parser extracts sections and repeated entities with source references.
 3. Runtime schemas validate parsed data into a canonical candidate model.
 4. The composer creates a resume model from canonical facts and build options.
-5. The LaTeX renderer escapes all candidate text and writes `resume.tex`.
+5. The LaTeX renderer escapes all candidate text, applies deterministic one-page source-order budgeting and the A4 reference style, and writes `resume.tex`.
 6. The compiler invokes the npm-managed LaTeX compiler first, then falls back to `latexmk` or `pdflatex`, to produce `resume.pdf`.
 
 ## Boundaries

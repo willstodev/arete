@@ -20,6 +20,10 @@ describe("candidate pipeline", () => {
     const candidate = parseCandidateMarkdown(markdown, "examples/candidate.example.md");
     const latex = renderLatex(composeResume(candidate));
 
+    expect(latex).toContain("\\documentclass[10pt,a4paper]{article}");
+    expect(latex).toContain("Arete one-page rule failed");
+    expect(latex).toContain("\\areteEntry");
+    expect(latex).toContain("\\textbf{Key Technologies:}");
     expect(latex).toContain(
       "Migrated a legacy Node.js API to TypeScript, replacing loosely typed request handlers with typed service boundaries."
     );

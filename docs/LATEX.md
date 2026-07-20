@@ -9,6 +9,9 @@ The resume template prioritizes ATS readability, selectable text, restrained typ
 - Keep text selectable.
 - Escape all candidate-provided text.
 - Keep generated artifacts outside source control by default.
+- Fit the generated resume on one A4 page. If rendered content exceeds one page, compilation must fail rather than silently producing a multi-page resume.
+- Follow the William Augusto reference resume style: centered name/contact header, compact black-and-white typography, section headings with thin rules, right-aligned location/date metadata, and dense ATS-readable bullets.
+- Apply deterministic one-page budgeting for long lists. Skills, bullets, and technology lists preserve candidate source order and may omit lower-priority overflow items, but rendered claims must never be rewritten into unsupported facts.
 
 ## Toolchain
 
