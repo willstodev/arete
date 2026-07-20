@@ -5,7 +5,7 @@ Arete compiles structured candidate information into truthful resumes. Candidate
 ## MVP
 
 - CLI commands for template creation, validation, and build.
-- Guided Markdown candidate source format.
+- Guided Markdown candidate source format with STAR evidence prompts.
 - Runtime validation into a typed canonical candidate model.
 - Deterministic resume composition.
 - English output by default.
@@ -23,6 +23,7 @@ Arete compiles structured candidate information into truthful resumes. Candidate
 ## Inputs
 
 - Candidate source Markdown.
+- STAR evidence notes for important work: Situation, Task, Action, Result, and evidence status.
 - Optional build options such as locale and output directory.
 - Optional job description is deferred until the targeting milestone.
 
@@ -41,6 +42,7 @@ Arete compiles structured candidate information into truthful resumes. Candidate
 ## Invariants
 
 - Generated factual claims must be supported by candidate source data.
+- STAR is the preferred evidence-gathering method, not permission to invent impact.
 - Targeting and localization may change emphasis and wording but not truth.
 - User text must be escaped before LaTeX rendering.
 - Invalid or incomplete required source data must fail before rendering.
@@ -48,3 +50,14 @@ Arete compiles structured candidate information into truthful resumes. Candidate
 ## Definition of Done
 
 The MVP is done when the CLI can create a template, validate a sanitized example, generate `.tex`, compile `.pdf` in an environment with TeX, preserve provenance for resume facts, pass the documented quality gates, and provide useful documentation for a fresh contributor.
+
+## STAR Method
+
+Arete uses STAR because recruiters and interviewers respond better to evidence-backed achievements than generic responsibility lists.
+
+- Situation: the context, problem, or opportunity.
+- Task: what the candidate was responsible for.
+- Action: what the candidate personally did.
+- Result: what changed afterward.
+
+The generated resume should usually compress STAR into one concise bullet. If the Result is unknown, the bullet must still be truthful and should avoid fake metrics or inflated impact.

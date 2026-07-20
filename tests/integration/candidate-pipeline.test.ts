@@ -20,7 +20,10 @@ describe("candidate pipeline", () => {
     const candidate = parseCandidateMarkdown(markdown, "examples/candidate.example.md");
     const latex = renderLatex(composeResume(candidate));
 
-    expect(latex).toContain("Migrated a legacy Node.js API to TypeScript.");
+    expect(latex).toContain(
+      "Migrated a legacy Node.js API to TypeScript, replacing loosely typed request handlers with typed service boundaries."
+    );
+    expect(latex).not.toContain("STAR evidence notes");
     expect(latex).not.toContain("Led a 12-person migration");
   });
 

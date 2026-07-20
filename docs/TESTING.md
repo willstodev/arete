@@ -14,6 +14,7 @@ Tests verify behavior and invariants, not implementation trivia.
 - Runtime validation.
 - Provenance preservation.
 - Factual integrity constraints.
+- STAR evidence notes do not leak into rendered bullets unless intentionally modeled.
 - Localization.
 - LaTeX escaping.
 - Missing tool diagnostics.

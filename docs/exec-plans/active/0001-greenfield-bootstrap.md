@@ -26,7 +26,7 @@ Create the initial Arete documentation, TypeScript toolchain, CLI, candidate par
 
 - Documentation foundation completed.
 - Toolchain bootstrap completed.
-- Candidate parsing and validation completed for the MVP Markdown contract.
+- Candidate parsing and validation completed for the MVP Markdown contract, including parse-safe STAR evidence notes in examples/templates.
 - Resume composition and localization completed for deterministic English and `pt-BR` labels/date output.
 - LaTeX rendering and PDF compilation wrapper completed.
 - Tests, coverage, build, and CLI smoke validation completed.

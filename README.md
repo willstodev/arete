@@ -2,7 +2,7 @@
 
 Arete is a resume compiler for structured candidate information. It turns a human-authored candidate source file into a truthful, ATS-friendly, human-readable resume as both LaTeX and PDF.
 
-The project is CLI-first and deliberately small: no web app, account system, resume database, or cloud service is required for the MVP. The core idea is a compiler pipeline with explicit validation and provenance instead of free-form resume generation.
+The project is CLI-first and deliberately small: no web app, account system, resume database, or cloud service is required for the MVP. The core idea is a compiler pipeline with explicit validation, provenance, and STAR-style evidence gathering instead of free-form resume generation.
 
 ## Status
 
@@ -11,6 +11,7 @@ Greenfield bootstrap in progress. The current implementation provides the initia
 ## Goals
 
 - preserve candidate-provided facts as the source of truth;
+- encourage STAR-style evidence: Situation, Task, Action, Result;
 - generate selectable-text resumes suitable for ATS parsing;
 - produce concise, professional human-readable output;
 - keep the architecture maintainable, testable, and reproducible;
@@ -34,6 +35,7 @@ pnpm arete build --source candidate.md --out dist/resume
 
 ```text
 candidate Markdown
+  -> STAR evidence notes
   -> parser with source references
   -> runtime validation
   -> canonical candidate model
