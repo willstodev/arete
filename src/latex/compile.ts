@@ -1,7 +1,7 @@
 import { access } from "node:fs/promises";
 import { constants } from "node:fs";
 import { spawn } from "node:child_process";
-import { dirname } from "node:path";
+import { basename, dirname } from "node:path";
 import { EnvironmentError } from "../diagnostics/errors.js";
 
 export type CompileResult = {
@@ -25,9 +25,10 @@ export async function compilePdf(texPath: string): Promise<CompileResult> {
   if (latexmk) {
     await run(
       "latexmk",
-      ["-pdf", "-interaction=nonstopmode", "-halt-on-error", texPath],
+      ["-pdf", "-interaction=nonstopmode", "-halt-on-error", basename(texPath)],
       dirname(texPath)
     );
+    await assertPdfExists(pdfPath);
     return { skipped: false, pdfPath, message: `Wrote ${pdfPath}` };
   }
 
@@ -35,15 +36,24 @@ export async function compilePdf(texPath: string): Promise<CompileResult> {
   if (pdflatex) {
     await run(
       "pdflatex",
-      ["-interaction=nonstopmode", "-halt-on-error", texPath],
+      ["-interaction=nonstopmode", "-halt-on-error", basename(texPath)],
       dirname(texPath)
     );
+    await assertPdfExists(pdfPath);
     return { skipped: false, pdfPath, message: `Wrote ${pdfPath}` };
   }
 
   throw new EnvironmentError(
     `Wrote ${texPath}, but no LaTeX compiler was found. Install latexmk or pdflatex to produce ${pdfPath}.`
   );
+}
+
+async function assertPdfExists(pdfPath: string): Promise<void> {
+  try {
+    await access(pdfPath, constants.F_OK);
+  } catch {
+    throw new EnvironmentError(`LaTeX compiler completed, but ${pdfPath} was not created.`);
+  }
 }
 
 async function commandExists(command: string): Promise<boolean> {

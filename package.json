@@ -6,7 +6,7 @@
   "private": true,
   "packageManager": "pnpm@10.18.3",
   "bin": {
-    "arete": "./dist/cli/main.js"
+    "arete": "./dist/src/cli/main.js"
   },
   "scripts": {
     "arete": "tsx src/cli/main.ts",
