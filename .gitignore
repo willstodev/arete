@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+private/
+*.private.md
+*.aux
+*.fls
+*.fdb_latexmk
+*.log
+*.out
+*.pdf
+!examples/*.pdf
