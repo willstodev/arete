@@ -15,12 +15,12 @@ jobs:
           node-version-file: .nvmrc
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
+      - run: pnpm audit
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test:coverage
       - run: pnpm build
       - run: pnpm arete validate --source examples/candidate.example.md
-      - run: pnpm arete build --source examples/candidate.example.md --out dist/example
-        env:
-          ARETE_SKIP_PDF_COMPILE: "1"
+      - run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - run: pnpm test:pdf

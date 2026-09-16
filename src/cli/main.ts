@@ -7,7 +7,7 @@ import { candidateTemplate } from "../candidate/template.js";
 import { validateEnv } from "../config/env.js";
 import { formatError, EnvironmentError } from "../diagnostics/errors.js";
 import { compilePdf } from "../latex/compile.js";
-import { renderLatex } from "../latex/render.js";
+import { renderLatex, renderWarnings } from "../latex/render.js";
 import { composeResume } from "../resume/compose.js";
 
 type BuildOptions = {
@@ -39,7 +39,7 @@ program
     await runCli(async () => {
       const output = options.output ?? "candidate.md";
       await mkdir(dirname(output), { recursive: true });
-      await writeFile(output, candidateTemplate, "utf8");
+      await writeFile(output, candidateTemplate, { encoding: "utf8", flag: "wx" });
       console.log(`Wrote ${output}`);
     });
   });
@@ -69,6 +69,7 @@ program
       const candidate = parseCandidateMarkdown(markdown, options.source);
       const resume = composeResume(candidate, options.locale ? { locale: options.locale } : {});
       const latex = renderLatex(resume);
+      for (const warning of renderWarnings(resume)) console.warn(`Warning: ${warning}`);
       await mkdir(options.out, { recursive: true });
       const texPath = join(options.out, "resume.tex");
       await writeFile(texPath, latex, "utf8");

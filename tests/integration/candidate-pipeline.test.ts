@@ -10,7 +10,7 @@ describe("candidate pipeline", () => {
     const candidate = parseCandidateMarkdown(markdown, "examples/candidate.example.md");
     const resume = composeResume(candidate);
 
-    expect(resume.name.text).toBe("Jordan Avery");
+    expect(resume.name.text).toBe("Example Candidate");
     expect(resume.experiences).toHaveLength(2);
     expect(resume.experiences[0]!.bullets[0]!.sources[0]!.section).toBe("Experience");
   });

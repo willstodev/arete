@@ -16,25 +16,28 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:pdf": "tsx tests/pdf-smoke.ts"
   },
   "dependencies": {
     "commander": "^14.0.1",
-    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.3.2",
     "node-latex-compiler": "1.0.5",
+    "pdf-lib": "^1.17.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.9.1",
-    "@vitest/coverage-v8": "^4.0.0",
-    "eslint": "^9.38.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.6.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.2",
-    "vitest": "^4.0.0"
+    "typescript-eslint": "^8.70.0",
+    "vitest": "^4.1.11"
   },
   "engines": {
     "node": ">=24 <25"

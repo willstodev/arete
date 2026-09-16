@@ -1,10 +1,24 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
 describe("CLI build", () => {
+  it("does not overwrite an existing candidate file on init", async () => {
+    const out = await mkdtemp(join(tmpdir(), "arete-init-"));
+    const source = join(out, "candidate.md");
+    try {
+      await writeFile(source, "private candidate facts");
+      await expect(
+        run("node", ["--import", "tsx", "src/cli/main.ts", "init", "--output", source])
+      ).rejects.toThrow("EEXIST");
+      expect(await readFile(source, "utf8")).toBe("private candidate facts");
+    } finally {
+      await rm(out, { recursive: true, force: true });
+    }
+  });
+
   it("writes resume.tex and can skip PDF compilation", async () => {
     const out = await mkdtemp(join(tmpdir(), "arete-"));
     try {
@@ -20,7 +34,7 @@ describe("CLI build", () => {
       ]);
 
       const tex = await readFile(join(out, "resume.tex"), "utf8");
-      expect(tex).toContain("Jordan Avery");
+      expect(tex).toContain("Example Candidate");
       expect(tex).toContain("\\section*{Experience}");
     } finally {
       await rm(out, { recursive: true, force: true });

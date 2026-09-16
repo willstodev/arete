@@ -36,6 +36,7 @@ export type ResumeLanguage = {
 };
 
 export type ResumeLabels = {
+  technologies: string;
   summary: string;
   skills: string;
   experience: string;
