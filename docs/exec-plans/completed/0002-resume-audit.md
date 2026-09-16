@@ -38,7 +38,7 @@ Assess resume suitability against primary recruiting guidance, anonymize public 
 - Sanitized public examples/template references; restored 10pt body text, localized labels, separated records, and exposed budget omissions.
 - Added 50 passing tests plus a real concurrent English/Portuguese PDF and overflow smoke. Production and development dependency audits are clean after compatible updates.
 - Documented employer evidence and practical limits in `docs/RESUME_AUDIT.md`.
-- Implementation committed as `a092d3e` on `fix/resume-audit-privacy-and-validation`. Publication is blocked by GitHub authentication: the SSH key is unavailable to the session, and the authenticated GitHub CLI OAuth token lacks `workflow` scope. GitHub rejected the complete push because it changes `.github/workflows/ci.yml`; no remote branch or PR was created. A GitHub CLI scope-refresh request is awaiting user authorization.
+- Implementation committed as `a092d3e` on `fix/resume-audit-privacy-and-validation`. GitHub CLI authorization was refreshed to include workflow access, the complete branch was pushed, and [PR #1](https://github.com/willstodev/arete/pull/1) was created using `gh`.
 
 ## Validation
 
@@ -52,4 +52,4 @@ Assess resume suitability against primary recruiting guidance, anonymize public 
 - Local Poppler was unpacked under `/tmp/arete-poppler` because system installation requires an unavailable sudo password. Smoke command uses that directory on PATH and its library directory in LD_LIBRARY_PATH; CI installs `poppler-utils` normally.
 - `pnpm install --frozen-lockfile`, `pnpm format:check`, `pnpm arete validate --source examples/candidate.example.md`, and `git diff --check`: pass.
 - Repository diff reviewed; no private sources or generated resumes are included.
-- Publication remains the final milestone; after authorization, push the existing branch and create the PR using `gh`. Do not drop the CI repairs to bypass the missing scope.
+- Publication completed with the CI repairs included. The authentication blocker is resolved.
