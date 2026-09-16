@@ -5,15 +5,17 @@ locale: en
 
 # Candidate
 
+Synthetic demonstration only. All candidate details below are fictional.
+
 ## Identity
 
-Name: Jordan Avery
+Name: Example Candidate
 Headline: Backend TypeScript Engineer
-Location: Austin, TX
-Email: jordan.avery@example.com
-Phone: +1 555 010 0142
-LinkedIn: https://www.linkedin.com/in/jordan-avery-example
-GitHub: https://github.com/javery-example
+Location: Example City
+Email: candidate@example.com
+Phone: +1 202 555 0142
+LinkedIn: https://example.com/linkedin
+GitHub: https://example.com/github
 
 ## Summary
 
@@ -35,7 +37,7 @@ Backend engineer focused on TypeScript services, API design, data validation, an
 
 ## Experience
 
-### Platform Engineer | Northstar Labs | 2021-03 - Present | Austin, TX
+### Platform Engineer | Example Employer A | 2021-03 - Present | Example City
 
 - Migrated a legacy Node.js API to TypeScript, replacing loosely typed request handlers with typed service boundaries.
 - Built runtime validation for customer-facing API payloads, producing clearer client errors for invalid requests.
@@ -52,7 +54,7 @@ Evidence status: No exact defect-reduction metric is known, so the resume avoids
 
 Technologies: TypeScript, Node.js, PostgreSQL, Zod, Vitest, GitHub Actions
 
-### Software Engineer | Meadow Systems | 2018-07 - 2021-02 | Remote
+### Software Engineer | Example Employer B | 2018-07 - 2021-02 | Remote
 
 - Maintained internal REST APIs used by operations teams to manage customer onboarding workflows.
 - Reworked data import jobs to surface row-level validation failures instead of generic batch errors.
@@ -87,7 +89,7 @@ Technologies: TypeScript, GitHub Actions
 
 ## Education
 
-### B.S. Computer Science | State University | 2018
+### B.S. Computer Science | Example University | 2018
 
 ## Certifications
 

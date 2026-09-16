@@ -27,7 +27,6 @@ export function renderLatex(resume: ResumeModel): string {
     "\\newcommand{\\areteEntry}[4]{\\textbf{#1}\\hfill\\textbf{#2}\\\\\\emph{#3}\\hfill\\emph{#4}\\\\}",
     "\\AtEndDocument{\\ifnum\\getpagerefnumber{LastPage}>1\\errmessage{Arete one-page rule failed: generated resume exceeds one page}\\fi}",
     "\\begin{document}",
-    "\\small",
     `\\begin{center}{\\huge ${fact(resume.name)}}\\\\`,
     resume.headline ? `${fact(resume.headline)}\\\\` : "",
     contactLine(resume),
@@ -53,7 +52,11 @@ export function renderLatex(resume: ResumeModel): string {
       lines.push(
         itemize([
           ...limitFacts(experience.bullets, MAX_EXPERIENCE_BULLETS).map(fact),
-          technologiesLine(experience.technologies, MAX_EXPERIENCE_TECHNOLOGIES)
+          technologiesLine(
+            experience.technologies,
+            MAX_EXPERIENCE_TECHNOLOGIES,
+            resume.labels.technologies
+          )
         ])
       );
     }
@@ -67,7 +70,11 @@ export function renderLatex(resume: ResumeModel): string {
       lines.push(
         itemize([
           ...limitFacts(project.bullets, MAX_PROJECT_BULLETS).map(fact),
-          technologiesLine(project.technologies, MAX_PROJECT_TECHNOLOGIES)
+          technologiesLine(
+            project.technologies,
+            MAX_PROJECT_TECHNOLOGIES,
+            resume.labels.technologies
+          )
         ])
       );
     }
@@ -78,7 +85,7 @@ export function renderLatex(resume: ResumeModel): string {
     for (const education of resume.education) {
       const date = education.date ? ` \\hfill ${fact(education.date)}` : "";
       lines.push(
-        `\\textbf{${fact(education.credential)}} -- ${fact(education.institution)}${date}`
+        `\\textbf{${fact(education.credential)}} -- ${fact(education.institution)}${date}\\par`
       );
     }
   }
@@ -127,14 +134,20 @@ function entryHeader(
 }
 
 function section(title: string, bodyLines: string[]): string {
-  return [`\\section*{${escapeLatex(title)}}`, ...bodyLines].join("\n");
+  return [`\\section*{${escapeLatex(title)}}`, ...bodyLines.map((line) => `${line}\\par`)].join(
+    "\n"
+  );
 }
 
-function technologiesLine(technologies: ResumeFact[], limit: number): string | undefined {
+function technologiesLine(
+  technologies: ResumeFact[],
+  limit: number,
+  label: string
+): string | undefined {
   if (technologies.length === 0) {
     return undefined;
   }
-  return `\\textbf{Key Technologies:} ${limitFacts(technologies, limit).map(fact).join(", ")}.`;
+  return `\\textbf{${escapeLatex(label)}:} ${limitFacts(technologies, limit).map(fact).join(", ")}.`;
 }
 
 function itemize(items: (string | undefined)[]): string {
@@ -147,4 +160,29 @@ function itemize(items: (string | undefined)[]): string {
 
 function limitFacts(facts: ResumeFact[], limit: number): ResumeFact[] {
   return facts.slice(0, limit);
+}
+
+export function renderWarnings(resume: ResumeModel): string[] {
+  const warnings: string[] = [];
+  const check = (facts: ResumeFact[], limit: number, label: string) => {
+    if (facts.length > limit) {
+      warnings.push(
+        `${label}: omitted ${facts.length - limit} item(s) for the one-page budget; review source order.`
+      );
+    }
+  };
+  check(resume.skills, MAX_SKILLS, "Skills");
+  resume.experiences.forEach((experience, index) => {
+    check(experience.bullets, MAX_EXPERIENCE_BULLETS, `Experience ${index + 1} bullets`);
+    check(
+      experience.technologies,
+      MAX_EXPERIENCE_TECHNOLOGIES,
+      `Experience ${index + 1} technologies`
+    );
+  });
+  resume.projects.forEach((project, index) => {
+    check(project.bullets, MAX_PROJECT_BULLETS, `Project ${index + 1} bullets`);
+    check(project.technologies, MAX_PROJECT_TECHNOLOGIES, `Project ${index + 1} technologies`);
+  });
+  return warnings;
 }

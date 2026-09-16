@@ -1,4 +1,5 @@
 import type { ResumeLabels } from "./types.js";
+import { ValidationError } from "../diagnostics/errors.js";
 
 const englishLabels: ResumeLabels = {
   summary: "Summary",
@@ -7,17 +8,19 @@ const englishLabels: ResumeLabels = {
   projects: "Projects",
   education: "Education",
   certifications: "Certifications",
-  languages: "Languages"
+  languages: "Languages",
+  technologies: "Key Technologies"
 };
 
 const portugueseBrazilLabels: ResumeLabels = {
   summary: "Resumo",
-  skills: "Competencias",
-  experience: "Experiencia",
+  skills: "Competências",
+  experience: "Experiência",
   projects: "Projetos",
-  education: "Formacao",
-  certifications: "Certificacoes",
-  languages: "Idiomas"
+  education: "Formação",
+  certifications: "Certificações",
+  languages: "Idiomas",
+  technologies: "Tecnologias"
 };
 
 export function normalizeLocale(locale: string | undefined): string {
@@ -25,11 +28,12 @@ export function normalizeLocale(locale: string | undefined): string {
     return "en";
   }
 
-  if (locale === "pt" || locale.toLowerCase() === "pt-br") {
+  if (locale.toLowerCase() === "pt" || locale.toLowerCase() === "pt-br") {
     return "pt-BR";
   }
 
-  return "en";
+  if (locale.toLowerCase() === "en") return "en";
+  throw new ValidationError(`Unsupported locale "${locale}". Supported locales: en, pt-BR.`);
 }
 
 export function labelsForLocale(locale: string): ResumeLabels {
@@ -50,12 +54,13 @@ function formatDate(value: string, locale: string): string {
     return normalizeLocale(locale) === "pt-BR" ? "Atual" : "Present";
   }
 
-  const match = /^(\d{4})-(\d{2})$/.exec(value);
+  const match = /^(\d{4})-(0[1-9]|1[0-2])$/.exec(value);
   if (!match?.[1] || !match[2]) {
     return value;
   }
 
-  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, 1));
+  const date = new Date(0);
+  date.setUTCFullYear(Number(match[1]), Number(match[2]) - 1, 1);
   return new Intl.DateTimeFormat(normalizeLocale(locale), {
     year: "numeric",
     month: "short",

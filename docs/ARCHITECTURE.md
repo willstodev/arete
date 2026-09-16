@@ -4,12 +4,13 @@ Arete is a Node.js TypeScript CLI with a linear compiler pipeline.
 
 ## Pipeline
 
-1. Candidate Markdown is read from disk.
+1. Candidate Markdown is read from disk; a YAML-only front-matter parser validates metadata without executable engines.
 2. The parser extracts sections and repeated entities with source references.
 3. Runtime schemas validate parsed data into a canonical candidate model.
 4. The composer creates a resume model from canonical facts and build options.
-5. The LaTeX renderer escapes all candidate text, applies deterministic one-page source-order budgeting and the A4 reference style, and writes `resume.tex`.
-6. The compiler invokes the npm-managed LaTeX compiler first, then falls back to `latexmk` or `pdflatex`, to produce `resume.pdf`.
+5. The LaTeX renderer escapes all candidate text, applies deterministic one-page source-order budgeting and the single-column A4 style, and writes `resume.tex`.
+6. The compiler resolves the npm-managed Tectonic runtime and invokes it with an argument array in a unique temporary directory. If unavailable, discovery falls back to system `tectonic`, `latexmk`, or `pdflatex`. The npm shell wrapper is never invoked.
+7. `pdf-lib` validates the resulting page tree and requires exactly one page before publishing `resume.pdf`. Compilation/skip removes stale PDF output; intermediate files are cleaned on success or failure.
 
 ## Boundaries
 
@@ -22,7 +23,7 @@ Arete is a Node.js TypeScript CLI with a linear compiler pipeline.
 
 ## Provenance
 
-Canonical facts include `SourceRef` values with file, section, and line information where practical. Resume items carry provenance references to the canonical fields they came from. This keeps generated claims inspectable and testable without a heavyweight claim database.
+Canonical facts include `SourceRef` values with file, section, and original-file line information (including front matter). Resume items carry provenance references to the canonical fields they came from. This keeps generated claims inspectable and testable without a heavyweight claim database.
 
 ## STAR Evidence
 
@@ -34,7 +35,7 @@ Candidate source files should capture STAR evidence for important work:
 - Result;
 - Evidence status.
 
-The current MVP renders only bullet lines and supported structured fields. STAR evidence notes are still valuable source material for future composition and AI-assisted editing, but they must never create a factual claim unless the underlying candidate source supports it.
+The current MVP renders only bullet lines before the STAR evidence marker and supported structured fields. Unknown/duplicate sections and malformed positional records are rejected. STAR evidence notes are still valuable source material for future composition and AI-assisted editing, but they must never create a factual claim unless the underlying candidate source supports it.
 
 ## Localization
 

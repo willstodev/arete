@@ -54,7 +54,7 @@ The MVP is done when the CLI can create a template, validate a sanitized example
 
 ## STAR Method
 
-Arete uses STAR because recruiters and interviewers respond better to evidence-backed achievements than generic responsibility lists.
+Arete uses STAR as a structured evidence-gathering aid for writing concrete contributions and accomplishments. This does not imply endorsement of a specific template by an employer; see `docs/RESUME_AUDIT.md` for primary recruiting sources.
 
 - Situation: the context, problem, or opportunity.
 - Task: what the candidate was responsible for.
@@ -62,3 +62,13 @@ Arete uses STAR because recruiters and interviewers respond better to evidence-b
 - Result: what changed afterward.
 
 The generated resume should usually compress STAR into one concise bullet. If the Result is unknown, the bullet must still be truthful and should avoid fake metrics or inflated impact.
+
+## Source Contract And Output Limits
+
+- Front matter is YAML with `schemaVersion: 1` and optional supported locale (`en`, `pt-BR`, or the `pt` alias).
+- Section names follow the generated template exactly; unknown or duplicate sections are errors.
+- Identity requires a name and valid email. `init` never overwrites an existing file.
+- Pipe-separated fields retain empty positions. Experience uses four positions, with an optional empty location; start/end dates accept `YYYY` or `YYYY-MM`, and end also accepts `Present`.
+- Bullets after the `STAR evidence notes:` marker are notes, not resume claims.
+- Source order is preserved. Fixed list budgets may omit later items with CLI warnings; the final PDF must be one page.
+- `pt-BR` changes template labels and experience-date display; candidate prose is not translated.

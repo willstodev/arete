@@ -19,7 +19,7 @@ Create the initial Arete documentation, TypeScript toolchain, CLI, candidate par
 - `arete init`, `arete validate`, and `arete build` work against the example candidate.
 - Generated resume facts are derived from candidate source data.
 - LaTeX output escapes candidate text.
-- LaTeX output follows the one-page A4 William Augusto reference style.
+- LaTeX output follows the one-page A4 single-column style.
 - PDF compilation works through npm-installed tooling, with a useful diagnostic if no compiler path is available.
 - Formatting, linting, type checking, tests, coverage, and build pass.
 
@@ -36,7 +36,7 @@ Create the initial Arete documentation, TypeScript toolchain, CLI, candidate par
 ## Decisions
 
 - PDF compilation should not require Linux distribution packages by default. Arete uses the npm dependency `node-latex-compiler`, which supplies Tectonic through npm optional runtime packages. System `latexmk` and `pdflatex` remain fallback paths for environments that already provide them.
-- Resume output should be constrained to one A4 page and follow the William Augusto reference PDF's compact black-and-white LaTeX style.
+- Resume output should be constrained to one A4 page and follow the template's compact black-and-white LaTeX style.
 - One-page budgeting preserves candidate source order for long skills, bullets, and technology lists. Overflow items may be omitted, but rendered claims must remain directly grounded in candidate data.
 
 ## Validation
@@ -50,3 +50,7 @@ Create the initial Arete documentation, TypeScript toolchain, CLI, candidate par
 - `ARETE_SKIP_PDF_COMPILE=1 pnpm arete build --source examples/candidate.example.md --out dist/example`
 
 Local distribution TeX tooling is not installed in the current environment. Full PDF compilation is validated through the npm-managed compiler path installed by `pnpm install`.
+
+## Audit Follow-up
+
+Archived during the resume audit after the implemented MVP was revalidated. The audit supersedes the original compiler-wrapper implementation and PDF validation claims; see `0002-resume-audit.md` for current results.

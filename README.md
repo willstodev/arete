@@ -6,7 +6,7 @@ The project is CLI-first and deliberately small: no web app, account system, res
 
 ## Status
 
-Greenfield bootstrap in progress. The current implementation provides the initial CLI, Markdown candidate parsing, validation, deterministic resume composition, LaTeX rendering, and npm-managed PDF compilation.
+The CLI supports guided Markdown input, validation, deterministic resume composition, and one-page A4 LaTeX/PDF generation. See [the resume audit](docs/RESUME_AUDIT.md) for recruiting-source evidence, confirmed repairs, and limitations. No employer endorsement or universal ATS compatibility is claimed.
 
 ## Goals
 
@@ -24,12 +24,17 @@ corepack enable
 pnpm install
 pnpm build
 
-pnpm arete init --output candidate.md
-pnpm arete validate --source candidate.md
-pnpm arete build --source candidate.md --out dist/resume
+pnpm arete init --output private/candidate.md
+# Fill in your facts and remove unused placeholder sections before validation.
+pnpm arete validate --source private/candidate.md
+pnpm arete build --source private/candidate.md --out dist/resume
 ```
 
-`arete build` writes `resume.tex` and compiles `resume.pdf` through the npm-managed LaTeX compiler installed by `pnpm install`. System `latexmk` or `pdflatex` are used only as fallbacks. English is the default locale; use `--locale pt-BR` for localized section labels and dates currently supported by the MVP.
+`arete build` writes `resume.tex` and compiles `resume.pdf` through the npm-managed LaTeX compiler installed by `pnpm install`. The binary runs without a shell in an isolated temporary directory. System `tectonic`, `latexmk`, or `pdflatex` are used when the bundled binary is unavailable. English is the default locale; use `--locale pt-BR` for localized section labels and dates currently supported by the MVP.
+
+`init` refuses to overwrite an existing file. The supplied example is explicitly fictional; private sources and generated output should remain in ignored paths. This repository does not provide an automatic anonymous-resume exporter.
+
+Use the generated template's exact section names and field positions. Experience dates accept `YYYY` or `YYYY-MM`, with `Present` for an ongoing role. Put experience in reverse chronological order and list your most relevant bullets first: source order is preserved, and the CLI warns when fixed list budgets omit items. Content that still exceeds one page fails compilation. Locale changes affect labels and experience dates; they do not translate prose.
 
 ## Architecture
 
@@ -54,6 +59,9 @@ pnpm lint
 pnpm typecheck
 pnpm test:coverage
 pnpm build
+pnpm audit
+# Requires pdftotext (Poppler); builds real PDFs and tests text extraction.
+pnpm test:pdf
 ```
 
 See `docs/` for the product spec, architecture, testing strategy, security and privacy model, content policy, LaTeX constraints, and ExecPlan workflow.
