@@ -24,7 +24,8 @@ export function renderLatex(resume: ResumeModel): string {
     "\\setlist[itemize]{leftmargin=1.05em, topsep=2pt, itemsep=1pt, parsep=0pt}",
     "\\titleformat{\\section}{\\Large\\bfseries}{}{0pt}{}[\\titlerule]",
     "\\titlespacing*{\\section}{0pt}{10pt}{6pt}",
-    "\\newcommand{\\areteEntry}[4]{\\textbf{#1}\\hfill\\textbf{#2}\\\\\\emph{#3}\\hfill\\emph{#4}\\\\}",
+    "\\newcommand{\\areteEntrySpace}{\\par\\addvspace{6pt}}",
+    "\\newcommand{\\areteEntry}[4]{\\areteEntrySpace\\textbf{#1}\\hfill\\textbf{#2}\\par\\emph{#3}\\hfill\\emph{#4}\\par}",
     "\\AtEndDocument{\\ifnum\\getpagerefnumber{LastPage}>1\\errmessage{Arete one-page rule failed: generated resume exceeds one page}\\fi}",
     "\\begin{document}",
     `\\begin{center}{\\huge ${fact(resume.name)}}\\\\`,
@@ -66,7 +67,7 @@ export function renderLatex(resume: ResumeModel): string {
     lines.push(`\\section*{${escapeLatex(resume.labels.projects)}}`);
     for (const project of resume.projects) {
       const date = project.date ? ` \\hfill ${fact(project.date)}` : "";
-      lines.push(`\\textbf{${fact(project.name)}}${date}`);
+      lines.push(`\\areteEntrySpace\\textbf{${fact(project.name)}}${date}\\par`);
       lines.push(
         itemize([
           ...limitFacts(project.bullets, MAX_PROJECT_BULLETS).map(fact),
