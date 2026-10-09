@@ -31,6 +31,17 @@ describe("candidate pipeline", () => {
     expect(latex).not.toContain("Led a 12-person migration");
   });
 
+  it("separates consecutive experience and project entries with vertical space", async () => {
+    const markdown = await readFile("examples/candidate.example.md", "utf8");
+    const candidate = parseCandidateMarkdown(markdown, "examples/candidate.example.md");
+    const latex = renderLatex(composeResume(candidate));
+
+    expect(latex).toContain("\\newcommand{\\areteEntrySpace}{\\par\\addvspace{6pt}}");
+    expect(latex).toMatch(/\\newcommand\{\\areteEntry\}\[4\]\{\\areteEntrySpace/);
+    expect(latex).not.toMatch(/\\emph\{#4\}\\\\/);
+    expect(latex).toContain("\\areteEntrySpace\\textbf{Release Notes Compiler}");
+  });
+
   it("rejects missing required identity fields", () => {
     const markdown =
       "---\nschemaVersion: 1\n---\n\n# Candidate\n\n## Identity\n\nName: Missing Email\n";
